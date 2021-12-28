@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: master
+  branch: main
   commit_messages:
     create: "Create {{collection}} “{{slug}}”"
     update: "Update {{collection}} “{{slug}}”"
@@ -18,15 +18,18 @@ collections:
     create: true
     format: "json"
     fields:
+      - { label: "Type", name: type, widget: "hidden", default: "post" }
       - { label: Title, name: title, widget: string }
+      - { label: Label, name: label, widget: string }
   - name: "posts"
     label: "Posts"
-    folder: "src/app/pages/posts"
+    folder: "src/app/posts"
     create: true
     slug: "{{slug}}"
     summary: "{{title}} {{fields.featured}}"
     fields:
       - { label: "Template Key", name: "templateKey", widget: "hidden", default: "project-page" }
+      - { label: "Type", name: type, widget: "hidden", default: "post" }
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
       - { label: "Featured Image", name: "featuredimage", widget: object, fields: [{ label: Image, name: image, widget: image }, { label: Alt, name: alt, widget: string }] }
