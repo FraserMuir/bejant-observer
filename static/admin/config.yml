@@ -15,8 +15,8 @@ collections:
   - name: "categories"
     label: "Categories"
     folder: "src/app/categories"
+    slug: "{{fields.title}}"
     create: true
-    format: "json"
     fields:
       - { label: "Type", name: type, widget: "hidden", default: "post" }
       - { label: Title, name: title, widget: string }
