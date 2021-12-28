@@ -12,7 +12,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${fonts.sansSerif};
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: subpixel-antialiased;
-    color: rgba(0,0,0,0.8);
+    color: ${colors.text};
     background: ${colors.background};
   }
   

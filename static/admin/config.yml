@@ -12,9 +12,9 @@ media_folder: static/media
 public_folder: /media
 
 collections:
-  - name: "tags"
-    label: "Tags"
-    folder: "src/app/tags"
+  - name: "categories"
+    label: "Categories"
+    folder: "src/app/categories"
     create: true
     format: "json"
     fields:
@@ -31,13 +31,7 @@ collections:
       - { label: "Publish Date", name: "date", widget: "datetime" }
       - { label: "Featured Image", name: "featuredimage", widget: object, fields: [{ label: Image, name: image, widget: image }, { label: Alt, name: alt, widget: string }] }
       - { label: "Body", name: "body", widget: "markdown" }
-      - {
-          label: "Tags",
-          name: tags,
-          widget: list,
-          label_singular: "tag",
-          fields: [{ label: "Name", name: "name", widget: "relation", collection: "tags", searchFields: ["title"], valueField: "title", displayFields: ["title"], required: false }],
-        }
+      - { label: "Category", name: category, widget: "relation", collection: "categories", search_fields: ["title"], value_field: "title", display_fields: ["title"] }
   - name: "pages"
     label: "Pages"
     files:
@@ -46,6 +40,8 @@ collections:
         name: "index"
         fields:
           - { label: "Template Key", name: templateKey, widget: "hidden", default: "index" }
+          - { label: "Type", name: type, widget: "hidden", default: "page" }
+          - { label: "Title", name: title, widget: "string" }
           - { label: "Main Image", name: image, widget: image }
       - file: "src/app/pages/about-us/index.md"
         label: "About Us"

@@ -2,18 +2,18 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "gatsby";
 import styled from "styled-components";
 
-import logo from "images/logo.svg";
 import { device } from "styles/breakpoints";
 import { colors } from "styles/colors";
 import { fonts } from "styles/fonts";
+import { Logo } from "./Logo";
 
-export const Navbar = () => {
+export const Navbar = ({ isSticky }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const spotRef = useRef(null);
-  
+
   useLayoutEffect(() => {
     const el = spotRef.current;
-    
+
     const callback = (entries) => {
       const [entry] = entries;
       setIsScrolled(!entry.isIntersecting);
@@ -22,21 +22,25 @@ export const Navbar = () => {
       rootMargin: "0px",
       threshold: [1],
     };
-    const io = new IntersectionObserver(callback, options);
-    io.observe(el);
-    return () => io.unobserve(el);
-  });
+
+    if (isSticky) {
+      const io = new IntersectionObserver(callback, options);
+      io.observe(el);
+      return () => io.unobserve(el);
+    }
+  }, [isSticky]);
 
   return (
     <>
       <div ref={spotRef} style={{ width: "100%", height: "0px" }} />
-      <StyledNavbar role="navigation" aria-label="main-navigation" className={isScrolled ? "scrolled" : ""}>
+      <StyledNavbar is_sticky={isSticky} role="navigation" aria-label="main-navigation" className={isScrolled ? "scrolled" : ""}>
         <StyledSkipLink href="#main">Skip to content</StyledSkipLink>
+        <StyledToggle id="menu-toggle" type="checkbox" />
         <StyledLogo className="logo-container" to="/">
-          <img className="logo" src={logo} alt="GCC logo" width="4.5rem" height="4.5rem" />
+          <Logo className="logo" alt="GCC logo" width="4.5rem" height="4.5rem" />
           <div className="logo-text">
-            <h2>Garelochhead</h2>
-            <h3>Community Council</h3>
+            <h3>The</h3>
+            <h2>Bejant Observer</h2>
           </div>
         </StyledLogo>
         <StyledMenuButton id="menu-button" htmlFor="menu-toggle" tabIndex={0}>
@@ -44,31 +48,18 @@ export const Navbar = () => {
           <span />
           <span />
         </StyledMenuButton>
-        <StyledToggle id="menu-toggle" type="checkbox" />
         <StyledMenu id="menu">
           <div className="menu-item">
-            <div className="sub-heading" tabIndex={0} role="button">
-              Meetings
-            </div>
-            <StyledSubMenu className="sub-menu">
-              <Link to="/next-meeting">Next Meeting</Link>
-              <Link to="/historical-meetings">Historical Meetings</Link>
-            </StyledSubMenu>
+            <Link to="/category/news">News</Link>
           </div>
           <div className="menu-item">
-            <Link to="/gallery">Gallery</Link>
+            <Link to="/category/arts-culture">Arts & Culture</Link>
           </div>
           <div className="menu-item">
-            <div className="sub-heading" tabIndex={0} role="button">
-              Local Info
-            </div>
-            <StyledSubMenu className="sub-menu">
-              <Link to="/links">Links</Link>
-              <Link to="/events">Events</Link>
-            </StyledSubMenu>
+            <Link to="/category/opinion">Opinion</Link>
           </div>
           <div className="menu-item">
-            <Link to="/news">News</Link>
+            <Link to="/category/miscellaneous">Miscelleanous</Link>
           </div>
         </StyledMenu>
       </StyledNavbar>
@@ -83,15 +74,15 @@ const StyledNavbar = styled.nav`
   justify-content: space-between;
   width: 100%;
   padding: 1.5em 1.75em;
-  position: fixed;
+  position: ${props => props.is_sticky ? "fixed" : "absolute"};
   top: 0;
   left: 0;
   right: 0;
   z-index: 99;
-  background: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  backdrop-filter: blur(10px);
-  transition: background 0.3s ease-out;
+  background: ${props => props.is_sticky ? "rgba(255, 255, 255, 0.6)" : "transparent !important"};
+  box-shadow: ${props => props.is_sticky && "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"};
+  backdrop-filter: ${props => props.is_sticky && "blur(10px)"};
+  transition: all 0.3s ease-out;
   &.scrolled {
     background: rgba(255, 255, 255, 0.875);
   }
@@ -172,55 +163,6 @@ const StyledLogo = styled(Link)`
   }
 `;
 
-const StyledSubMenu = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  width: 100%;
-  padding: 2.2em 0 0.2em;
-  background: rgba(255, 255, 255, 0.8);
-  visibility: hidden;
-  opacity: 0;
-  z-index: 99;
-  display: flex;
-  flex-flow: column nowrap;
-  transition: opacity 0.3s ease-out;
-
-  & > a {
-    position: relative;
-    margin: 0.2em -0.3em 0.3em 1.2em;
-    width: calc(100% - 1.7em);
-    padding: 0.5em;
-    font-family: ${fonts.serif};
-    text-decoration: none;
-    color: ${colors.darkBlue};
-    transition: color 0.3s;
-    font-size: 1.15em;
-
-    &:before {
-      z-index: -1;
-      content: "";
-      position: absolute;
-      width: 100%;
-      top: 0;
-      bottom: 0;
-      left: -0.8em;
-      background: ${colors.darkBlue};
-      transform: scaleX(0.025);
-      transform-origin: left;
-      transition: transform 0.3s;
-    }
-
-    &:hover {
-      color: ${colors.white};
-      &:before {
-        transform: scaleX(1);
-      }
-    }
-  }
-`;
-
 const StyledMenu = styled.div`
   display: flex;
   justify-content: center;
@@ -283,11 +225,15 @@ const StyledToggle = styled.input`
   display: none;
 
   @media ${device.mobile} {
-    & + #menu {
+    & + .logo-container + #menu-button + #menu {
       display: none;
     }
 
-    &:checked + #menu {
+    &:checked + .logo-container > .logo {
+      fill: ${colors.white};
+    }
+
+    &:checked + .logo-container + #menu-button + #menu {
       position: fixed;
       top: 0;
       left: 0;

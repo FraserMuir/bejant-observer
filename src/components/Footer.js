@@ -79,27 +79,19 @@ export const Footer = () => {
             <Link to="/about-us">About Us</Link>
           </div>
           <div className="socials">
-            <a href="https://www.facebook.com/Garelochhead-Community-Council-1833115896902836/" target="_blank" rel="noreferrer noopener">
+            <a href="https://www.facebook.com/BejantObserver/" target="_blank" rel="noreferrer noopener">
               <img src={facebookIcon} alt="facebook icon" width="2rem" height="2rem" />
             </a>
-            <a href="https://twitter.com/GarelochheadCC?lang=en-gb" target="_blank" rel="noreferrer noopener">
+            <a href="https://twitter.com/bejantobserver/" target="_blank" rel="noreferrer noopener">
               <img src={twitterIcon} alt="twitter icon" width="2rem" height="2rem" />
             </a>
-            <a href="https://www.instagram.com/garelochheadcommunity/?hl=en" target="_blank" rel="noreferrer noopener">
+            <a href="https://www.instagram.com/bejant_observer/" target="_blank" rel="noreferrer noopener">
               <img src={instagramIcon} alt="instagram icon" width="2rem" height="2rem" />
             </a>
           </div>
         </div>
         <p>
-          Garelochhead and surrounding area backdrops courtesy of
-          <a href="http://www.timberrall.com/" target="_blank" rel="noreferrer noopener">
-            Tim Berrall
-          </a>
-          and
-          <a href="http://www.robertbellstudio.co.uk/" target="_blank" rel="noreferrer noopener">
-            Robert Bell
-          </a>
-          unless stated otherwise
+          The Bejant Observer is not affiliated with the University of St Andrews
         </p>
       </div>
     </StyledFooter>

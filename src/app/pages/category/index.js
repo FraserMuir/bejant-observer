@@ -1,16 +1,16 @@
 import React from "react";
 import { graphql } from "gatsby";
 
-import { Home } from "./Home";
+import { Category } from "./Category";
 
-const HomePage = ({ data: { markdownRemark, allMarkdownRemark } }) => {
-  return <Home {...markdownRemark} posts={allMarkdownRemark.nodes} />;
+const CategoryPage = ({ data: { markdownRemark, allMarkdownRemark }, pageContext }) => {
+  return <Category {...markdownRemark} posts={allMarkdownRemark.nodes} label={pageContext.label} />;
 };
 
-export default HomePage;
+export default CategoryPage;
 
 export const pageQuery = graphql`
-  query HomePage($slug: String) {
+  query CategoryPage($slug: String, $category: String) {
     markdownRemark(fields: { slug: { eq: $slug } }) {
       frontmatter {
         image {
@@ -22,7 +22,7 @@ export const pageQuery = graphql`
         }
       }
     }
-    allMarkdownRemark(filter: { frontmatter: { type: { eq: "post" } } }) {
+    allMarkdownRemark(filter: { frontmatter: { type: { eq: "post" }, category: { eq: $category } } }) {
       nodes {
         id
         frontmatter {

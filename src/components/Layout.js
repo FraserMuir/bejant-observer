@@ -11,6 +11,9 @@ import { Seo } from "./SEO";
 const StyledLayout = styled.div`
   width: 100%;
   height: 100%;
+  .content {
+    margin-top: ${props => props.has_image ? 0 : "90px"};
+  }
   main {
     width: 80em;
     max-width: 96%;
@@ -18,8 +21,8 @@ const StyledLayout = styled.div`
     flex-flow: column nowrap;
     justify-content: center;
     margin: 0 auto;
-    margin-top: calc(-90px);
-    padding-top: calc(90px);
+    margin-top: -90px;
+    padding-top: 90px;
     & > * {
       margin-top: 3em;
     }
@@ -62,12 +65,13 @@ const StyledLayout = styled.div`
 `;
 
 export const Layout = ({ preview, children, image }) => {
+  console.log(image);
   return (
-    <StyledLayout>
+    <StyledLayout has_image={!!image}>
       {!preview && <Seo />}
       <GlobalStyle />
-      <Navbar />
-      <div>
+      <Navbar isSticky={!!image}/>
+      <div className="content">
         {image && <Image heading imageData={image} />}
         <main id="main">{children}</main>
       </div>

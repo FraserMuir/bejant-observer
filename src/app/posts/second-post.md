@@ -1,7 +1,8 @@
 ---
 templateKey: post
+type: post
 image: /media/red.jpg
 title: Test Post
-body: >-
-  This is a test post
+category: news
 ---
+This is a news post

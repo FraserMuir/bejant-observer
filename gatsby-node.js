@@ -2,59 +2,105 @@ const path = require("path");
 const { createFilePath } = require("gatsby-source-filesystem");
 const { fmImagesToRelative } = require("gatsby-remark-relative-images");
 
-exports.createPages = ({ actions, graphql }) => {
+exports.createPages = async ({ actions, graphql }) => {
   const { createPage } = actions;
 
   // Create 404 page
   createPage({
-    path: "/404",
+    path: "/404.html",
     component: path.resolve(`src/app/pages/404.js`),
   });
 
-  return graphql(`
+  // Fetch pages
+  const pagesData = await graphql(`
     {
-      allMarkdownRemark(limit: 1000) {
-        edges {
-          node {
-            id
-            fields {
-              slug
-            }
-            frontmatter {
-              templateKey
-            }
+      allMarkdownRemark(filter: { frontmatter: { type: { eq: "page" } } }) {
+        nodes {
+          fields {
+            slug
+          }
+          frontmatter {
+            templateKey
           }
         }
       }
     }
-  `).then((result) => {
-    if (result.errors) {
-      result.errors.forEach((e) => console.error(e.toString()));
-      return Promise.reject(result.errors);
+  `);
+
+  const pages = pagesData.data.allMarkdownRemark.nodes;
+
+  pages.forEach((page) => {
+    if (!page.frontmatter.templateKey) return null;
+    const pagePath = parsePathFromSlug(page.fields.slug);
+
+    createPage({
+      path: pagePath,
+      component: path.resolve(`src/app/pages/${String(page.frontmatter.templateKey)}/index.js`),
+      context: {
+        slug: page.fields.slug,
+      },
+    });
+  });
+
+  // Fetch posts
+  const postsData = await graphql(`
+    {
+      allMarkdownRemark(filter: { frontmatter: { type: { eq: "post" } } }) {
+        nodes {
+          fields {
+            slug
+          }
+          frontmatter {
+            title
+            category
+          }
+        }
+      }
     }
+  `);
 
-    const posts = result.data.allMarkdownRemark.edges;
+  // Create a page for each post
+  const posts = postsData.data.allMarkdownRemark.nodes;
 
-    posts.forEach((edge) => {
-      const id = edge.node.id;
-      if (!edge.node.frontmatter.templateKey) return null;
+  posts.forEach((post) => {
+    const postPath = parsePathFromSlug(post.fields.slug);
 
-      let slug = edge.node.fields.slug;
+    createPage({
+      path: `posts${postPath}`,
+      component: path.resolve(`src/app/pages/post/index.js`),
+      context: {
+        post: post.fields.slug,
+        slug: "/post/"
+      },
+    });
+  });
 
-      // Remove trailing slash
-      if (slug.endsWith("/")) slug = slug.slice(0, -1);
-      // Remove trailing index
-      if (slug.endsWith("index")) slug = slug.replace("index", "");
+  // Fetch categories
+  const categoriesData = await graphql(`
+    {
+      allMarkdownRemark(filter: { frontmatter: { type: { eq: "category" } } }) {
+        nodes {
+          frontmatter {
+            label
+            title
+          }
+        }
+      }
+    }
+  `);
 
-      createPage({
-        path: slug,
-        component: path.resolve(`src/app/pages/${String(edge.node.frontmatter.templateKey)}/index.js`),
-        // additional data can be passed via context
-        context: {
-          id,
-          slug: edge.node.fields.slug,
-        },
-      });
+  const categories = categoriesData.data.allMarkdownRemark.nodes;
+
+  // Create a page for each category
+  categories.forEach((category) => {
+    createPage({
+      path: `category/${category.frontmatter.title}`,
+      component: path.resolve(`src/app/pages/category/index.js`),
+      context: {
+        category: category.frontmatter.title,
+        label: category.frontmatter.label,
+        slug: "/category/",
+      },
     });
   });
 };
@@ -71,4 +117,12 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       value,
     });
   }
+};
+
+const parsePathFromSlug = (slug) => {
+  // Remove trailing slash
+  if (slug.endsWith("/")) slug = slug.slice(0, -1);
+  // Remove trailing index
+  if (slug.endsWith("index")) slug = slug.replace("index", "");
+  return slug;
 };

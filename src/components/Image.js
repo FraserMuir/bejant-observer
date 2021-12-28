@@ -5,7 +5,7 @@ export const Image = ({ imageData = {}, heading, useRegularImgInPreview, ...prop
   const { alt = "", childImageSharp, image, url } = imageData;
 
   const headingAttrs = heading
-    ? { style: { minHeight: "30vh", height: "100%", maxHeight: "26rem", minWidth: "100%" }, imgStyle: { objectPosition: "center top" }, className: "blur", loading: "eager" }
+    ? { style: { minHeight: "30vh", height: "100%", maxHeight: "26rem", minWidth: "100%" }, imgStyle: { objectPosition: "center center" }, loading: "eager" }
     : {};
 
   const attrs = { alt, durationFadeIn: 40, ...headingAttrs, ...props };

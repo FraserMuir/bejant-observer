@@ -6,7 +6,8 @@ export const colors = {
   grey: "rgba(110, 109, 109, 1)",
   darkGrey: "rgba(78, 77, 77, 1)",
   veryDarkGrey: "rgba(47, 46, 46, 1)",
-  background: "rgba(226, 225, 224, 1)",
+  background: "rgba(248, 248, 248, 1)",
   accentBackground: "rgba(35, 31, 32, 1)",
-  white: "rgba(255, 255, 255, 0.8)"
+  white: "rgba(255, 255, 255, 0.8)",
+  text: "rgba(5, 43, 74, 1)"
 };

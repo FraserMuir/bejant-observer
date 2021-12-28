@@ -10,19 +10,20 @@ const PostPage = ({ data: { markdownRemark } }) => {
 export default PostPage;
 
 export const pageQuery = graphql`
-  query PostPage($slug: String) {
-    markdownRemark(fields: { slug: { eq: $slug } }) {
+  query PostPage($post: String) {
+    markdownRemark(frontmatter: { type: { eq: "post" } }, fields: { slug: { eq: $post } }) {
       frontmatter {
-        title
         image {
           childImageSharp {
-            fluid(maxWidth: 1500, quality: 40) {
+            fluid(maxWidth: 900, quality: 80) {
               ...GatsbyImageSharpFluid
             }
           }
         }
-        body
+        title
+        category
       }
+      html
     }
   }
 `;

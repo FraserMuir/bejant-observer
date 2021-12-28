@@ -16,13 +16,13 @@ export const pageQuery = graphql`
         title
         image {
           childImageSharp {
-            fluid(maxWidth: 1500, quality: 40) {
+            fluid(maxWidth: 1500, quality: 100) {
               ...GatsbyImageSharpFluid
             }
           }
         }
-        body
       }
+      html
     }
   }
 `;
